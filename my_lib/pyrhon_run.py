@@ -1,59 +1,60 @@
 """
-Р—Р°РїСѓСЃРє СЃРєСЂРёРїС‚РѕРІ Рё СѓСЃС‚Р°РЅРѕРІРєР° Р±РёР±Р»РёРѕС‚РµРє
+Запуск скриптов именно тем питоном, которым запущен основной
+И установка библиотек в виртуальное окружение
 """
 
 from os import system as system
 from pathlib import Path
+import sys
+
+virtual_env_name = 'venv'
+virtual_lib_catalog_name = 'Lib'
 
 
-def packege_install(name_pack, name_install=''):
-    """РЎРїР°СЃРµРЅРёРµ РѕС‚ РІСЃРµС… Р±РµРґ. РЎС‚Р°РІРёРј РїР°РєРµС‚, РµСЃР»Рё
-    РµРіРѕ РЅРµС‚ - РІ РІРёСЂСѓС‚Р°Р»СЊРЅРѕРµ РѕРєСЂСѓР¶РµРЅРёРµ
+def lib_install(name_pack):
+    """
+    Установка пакетов библиотек
 
     Args:
-        name_pack: РёРјСЏ Р±РёР±Р»РёРѕС‚РµРєРё РїСЂРё РёРјРїРѕСЂС‚Рµ
-        name_install: РёРјСЏ Р±РёР±Р»РёРѕС‚РµРєРё РїСЂРё СѓСЃС‚Р°РЅРѕРІРєРµ
+        name_pack: имя пакета
     """
-    try:
-        exec('import {}'.format(name_pack))
-    except ModuleNotFoundError:
-        path_pack = Path.cwd() / 'venv' / 'Lib' / 'site-packages'
-        name_install = name_install if len(name_install) > 0 else name_pack
-        inst_cmd = 'pip install --upgrade --ignore-installed --target={} {}'.format(path_pack, name_install)
-        system(inst_cmd)
+
+    python_pass = get_python_pass()
+    if virtual_env_name not in python_pass:
+        print('Внимание! Не настроено виртуальное оркужение!')
+
+        inst_cmd = 'pip install --upgrade {}'.format(name_pack)
+    else:
+        work_space, *python_exe = python_pass.split('{}{}'.format(virtual_env_name, Path('/')))
+        path_pack = Path('{}/{}/{}'.format(work_space, virtual_env_name, virtual_lib_catalog_name))
+
+        inst_cmd = 'pip install --upgrade --ignore-installed --target={} {}'.format(path_pack, name_pack)
+
+    print(inst_cmd)
+    system(inst_cmd)
 
 
 def get_python_pass():
-    """РџРѕР»СѓС‡Р°РµС‚ РїСѓС‚СЊ Рє РїРёС‚РѕРЅСѓ РІ РІРёСЂС‚СѓР°Р»СЊРЅРѕРј
-    РѕРєСЂСѓР¶РµРЅРёРё РџР°Р№С‡Р°СЂРј :return: РїСѓС‚СЊ Рє РїРёС‚РѕРЅСѓ
     """
-
-    if Path('venv').exists():
-        python_pass = Path.cwd() / 'venv' / 'Scripts' / 'python.exe'
-        return python_pass
-    return None
+    Путь к питону в виртуальной среде
+    """
+    return sys.executable
 
 
-def run_python_file_in_env(python_file, params=''):
-    """Р·Р°РїСѓСЃРєР°РµС‚ РєР°РєРѕР№-Р»РёР±Рѕ СЃРєСЂРёРїС‚ РїРёС‚РѕРЅР°,
-    РёСЃРїРѕР»СЊР·СѓСЏ РїРёС‚РѕРЅ РёР· РІРёСЂС‚СѓР°Р»СЊРЅРѕРіРѕ
-    РѕРєСЂСѓР¶РµРЅРёСЏ :param python_file: РїСѓС‚СЊ Рє СЃРєСЂРёРїС‚Сѓ :param
-    params: РїР°СЂР°РјРµС‚СЂС‹ Р·Р°РїСѓСЃРєР° :return:
-
+def run_python_file(python_file, params=''):
+    """
     Args:
         python_file:
         params:
     """
     python_pass = get_python_pass()
-    if python_pass is None:
-        print('РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РІРёСЂС‚СѓР°Р»СЊРЅРѕРµ РѕРєСЂСѓР¶РµРЅРёРµ!')
-        return None
 
     file_run_pass = '{} {} {}'.format(Path(python_pass), Path(python_file), params)
     try:
         result_run = system(file_run_pass)
-        print(file_run_pass)
         return result_run
+
     except Exception as info:
+        print(file_run_pass)
         print(info)
         return None

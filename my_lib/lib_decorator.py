@@ -1,29 +1,22 @@
-
 """
-РЎРѕР±РёСЂР°РµРј РїРѕС‚РёС…РѕРЅСЊРєСѓ РєСЂСѓС‚С‹Рµ РїР»СЋС€РєРё РїРѕ РґРµРєРѕСЂР°С‚РѕСЂР°Рј
+Декораторы
 """
-
-import functools
 
 
 def class_all_decoration(function_decorator):
-    """РЎРѕР±СЂР°Р» РєРѕРјР±Рѕ РёР· РёРЅС‚РµСЂРЅРµС‚Р°. РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
-    РґРµРєРѕСЂР°С‚РѕСЂРѕРІ, РєРѕС‚РѕСЂС‹Р№ СЃС‚СЂРѕРёС‚ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
-    РґРµРєРѕСЂР°С‚РѕСЂРѕРІ РєР»Р°СЃСЃРѕРІ РћРґРЅРѕ РІ РґСЂСѓРіРѕРµ Рё РІ
-    РёС‚РѕРіРµ - Сѓ РЅР°СЃ РїР°СЂР°РјРµС‚СЂРёР·РѕРІР°РЅРЅС‹Р№
-    СѓРЅРёРІРµСЂСЃР°Р»СЊРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РґРµРєРѕСЂР°С†РёР№
+    """
+    Универсальный декоратор класса
 
     Args:
-        function_decorator: СЌС‚Рѕ Р·Р°СЂР°РЅРµРµ РѕРїСЂРµРґРµР»РµРЅРЅС‹Р№
-            РґРµРєРѕСЂР°С‚РѕСЂ
+        function_decorator: Любой декоратор
+
     """
 
     def track_exception(cls):
-
-        # РџРѕР»СѓС‡Р°РµРј РІСЃС‘ С‡С‚Рѕ РјРѕР¶РЅРѕ РґРµРєРѕСЂРёСЂРѕРІР°С‚СЊ
+        # Все колл-атрибуты (по факту функции)
         callable_attributes = {k: v for k, v in cls.__dict__.items() if callable(v)}
 
-        # Р’СЃС‚Р°РІР»СЏРµРј РІСЃРµ Р°С‚СЂРёР±СѓС‚С‹ РєСѓРґР° РјРѕР¶РµРј
+        # Декорирование всех функций
         for name, func in callable_attributes.items():
             decorated = function_decorator(func)
             setattr(cls, name, decorated)
@@ -66,7 +59,8 @@ def class_all_decoration(function_decorator):
 
 
 def singleton(cls):
-    """РљР»Р°СЃСЃ Singleton (РѕРґРёРЅ СЌРєР·РµРјРїР»СЏСЂ)
+    """
+    Простой синглтон
 
     Args:
         cls:
@@ -80,10 +74,10 @@ def singleton(cls):
     wrapper_singleton.instance = None
     return wrapper_singleton
 
-
-@singleton
-class TheOne:
-    pass
+#
+# @singleton
+# class TheOne:
+#     pass
 
 
 # print('СЃС‚Р°СЂС‚')

@@ -7,6 +7,10 @@ import re
 
 
 def get_pages(link):
+    """
+    Args:
+        link:
+    """
     links_to_visit = []
     links_to_visit.append(link)
     while links_to_visit:

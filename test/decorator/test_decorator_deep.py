@@ -21,6 +21,10 @@ A.bar()
 
 
 def method_friendly_decorator(func):
+    """
+    Args:
+        func:
+    """
     @functools.wraps(func)
     def wrapper(self, lie=40):
         lie -= 10
@@ -30,16 +34,18 @@ def method_friendly_decorator(func):
 
 
 def counter(func):
-    """
-    Декоратор, считающий и выводящий количество вызовов
-    декорируемой функции.
+    """Р”РµРєРѕСЂР°С‚РѕСЂ, СЃС‡РёС‚Р°СЋС‰РёР№ Рё РІС‹РІРѕРґСЏС‰РёР№
+    РєРѕР»РёС‡РµСЃС‚РІРѕ РІС‹Р·РѕРІРѕРІ РґРµРєРѕСЂРёСЂСѓРµРјРѕР№ С„СѓРЅРєС†РёРё.
+
+    Args:
+        func:
     """
 
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         wrapper.count += 1
         res = func(*args, **kwargs)
-        print("{0} была вызвана: {1}x".format(func.__name__, wrapper.count))
+        print("{0} Р±С‹Р»Р° РІС‹Р·РІР°РЅР°: {1}x".format(func.__name__, wrapper.count))
         return res
 
     wrapper.count = 0
@@ -47,19 +53,22 @@ def counter(func):
 
 
 def class_all_decoration(function_decorator):
-    """
-    Собрал комбо из интернета. Конструктор декораторов, который строит конструктор декораторов классов
-    Одно в другое и в итоге - у нас параметризованный универсальный конструктор декораций
+    """РЎРѕР±СЂР°Р» РєРѕРјР±Рѕ РёР· РёРЅС‚РµСЂРЅРµС‚Р°. РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
+    РґРµРєРѕСЂР°С‚РѕСЂРѕРІ, РєРѕС‚РѕСЂС‹Р№ СЃС‚СЂРѕРёС‚ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
+    РґРµРєРѕСЂР°С‚РѕСЂРѕРІ РєР»Р°СЃСЃРѕРІ РћРґРЅРѕ РІ РґСЂСѓРіРѕРµ Рё РІ
+    РёС‚РѕРіРµ - Сѓ РЅР°СЃ РїР°СЂР°РјРµС‚СЂРёР·РѕРІР°РЅРЅС‹Р№
+    СѓРЅРёРІРµСЂСЃР°Р»СЊРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РґРµРєРѕСЂР°С†РёР№
 
-    :param function_decorator: это заранее определенный декоратор
-    :return:
+    Args:
+        function_decorator: СЌС‚Рѕ Р·Р°СЂР°РЅРµРµ РѕРїСЂРµРґРµР»РµРЅРЅС‹Р№
+            РґРµРєРѕСЂР°С‚РѕСЂ
     """
 
     def track_exception(cls):
-        # Получаем всё что можно декорировать
+        # РџРѕР»СѓС‡Р°РµРј РІСЃС‘ С‡С‚Рѕ РјРѕР¶РЅРѕ РґРµРєРѕСЂРёСЂРѕРІР°С‚СЊ
         callable_attributes = {k: v for k, v in cls.__dict__.items() if callable(v)}
 
-        # Вставляем все атрибуты куда можем
+        # Р’СЃС‚Р°РІР»СЏРµРј РІСЃРµ Р°С‚СЂРёР±СѓС‚С‹ РєСѓРґР° РјРѕР¶РµРј
         for name, func in callable_attributes.items():
             decorated = function_decorator(func)
             setattr(cls, name, decorated)
@@ -73,9 +82,17 @@ class A:
     lisp = 10
 
     def f1(self, lie=20):
+        """
+        Args:
+            lie:
+        """
         print('1 ', lie)
 
     def f2(self, lie=20):
+        """
+        Args:
+            lie:
+        """
         print('2', lie)
 
 
@@ -92,59 +109,80 @@ print('-' * 400)
 
 class Decorator:
     def __init__(self, func):
-        print('> Класс Decorator метод __init__')
+        """
+        Args:
+            func:
+        """
+        print('> РљР»Р°СЃСЃ Decorator РјРµС‚РѕРґ __init__')
         self.func = func
         print(func.__name__)
 
     def __call__(self):
-        print('> перед вызовом класса...', self.func.__name__)
+        print('> РїРµСЂРµРґ РІС‹Р·РѕРІРѕРј РєР»Р°СЃСЃР°...', self.func.__name__)
         self.func()
-        print('> после вызова класса')
+        print('> РїРѕСЃР»Рµ РІС‹Р·РѕРІР° РєР»Р°СЃСЃР°')
 
 
 @Decorator
 def wrapped():
-    print('функция wrapped')
+    print('С„СѓРЅРєС†РёСЏ wrapped')
 
 
-print('>> старт')
+print('>> СЃС‚Р°СЂС‚')
 wrapped()
-print('>> конец')
+print('>> РєРѕРЅРµС†')
 
 
 class DecoratorArgs:
     def __init__(self, name):
-        print('> Декоратор с аргументами __init__:', name)
+        """
+        Args:
+            name:
+        """
+        print('> Р”РµРєРѕСЂР°С‚РѕСЂ СЃ Р°СЂРіСѓРјРµРЅС‚Р°РјРё __init__:', name)
         self.name = name
 
     def __call__(self, func):
+        """
+        Args:
+            func:
+        """
         def wrapper(a, b):
-            print('>>> до обернутой функции')
+            print('>>> РґРѕ РѕР±РµСЂРЅСѓС‚РѕР№ С„СѓРЅРєС†РёРё')
             func(a, b)
-            print('>>> после обернутой функции')
+            print('>>> РїРѕСЃР»Рµ РѕР±РµСЂРЅСѓС‚РѕР№ С„СѓРЅРєС†РёРё')
 
         return wrapper
 
 
 @DecoratorArgs("teste")
 def add(a, b):
-    print('функция add:', a, b)
+    """
+    Args:
+        a:
+        b:
+    """
+    print('С„СѓРЅРєС†РёСЏ add:', a, b)
 
 
-print('>> старт')
+print('>> СЃС‚Р°СЂС‚')
 add(10, 20)
-print('>> конец')
+print('>> РєРѕРЅРµС†')
 
 print('++++' * 80)
 
 """
-Обратный вызов коллбак мать его
+РћР±СЂР°С‚РЅС‹Р№ РІС‹Р·РѕРІ РєРѕР»Р»Р±Р°Рє РјР°С‚СЊ РµРіРѕ
 """
 
 app = {}
 
 
 def callback(route):
+    """
+    Args:
+        route:
+    """
     def wrapper(func):
         app[route] = func
         print('wrap')
@@ -165,18 +203,18 @@ def index():
     return 'OK'
 
 
-print('> старт')
+print('> СЃС‚Р°СЂС‚')
 route = app.get('/')
 if route:
     resp = route()
-    print('ответ:', resp)
+    print('РѕС‚РІРµС‚:', resp)
 
-print('> конец')
+print('> РєРѕРЅРµС†')
 
 print(app)
 
 """
-Проверка доступов 
+РџСЂРѕРІРµСЂРєР° РґРѕСЃС‚СѓРїРѕРІ 
 """
 
 print('++++' * 80)
@@ -185,10 +223,14 @@ user_permissions = ["user", "admin"]
 
 
 def check_permission(permission):
+    """
+    Args:
+        permission:
+    """
     def wrapper_permission(func):
         def wrapped_check():
             if permission not in user_permissions:
-                raise ValueError("Недостаточно прав")
+                raise ValueError("РќРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ РїСЂР°РІ")
             return func()
 
         return wrapped_check
@@ -198,28 +240,32 @@ def check_permission(permission):
 
 @check_permission("user")
 def check_value():
-    return "значение"
+    return "Р·РЅР°С‡РµРЅРёРµ"
 
 
 @check_permission("admin")
 def do_something():
-    return "только админ"
+    return "С‚РѕР»СЊРєРѕ Р°РґРјРёРЅ"
 
 
-print('старт программы')
+print('СЃС‚Р°СЂС‚ РїСЂРѕРіСЂР°РјРјС‹')
 print(check_value())
 print(do_something())
-print('конец программы')
+print('РєРѕРЅРµС† РїСЂРѕРіСЂР°РјРјС‹')
 
 print('++++' * 80)
 
 """
-Сингельтон
+РЎРёРЅРіРµР»СЊС‚РѕРЅ
 """
 
 
 def singleton(cls):
-    '''Класс Singleton (один экземпляр)'''
+    """РљР»Р°СЃСЃ Singleton (РѕРґРёРЅ СЌРєР·РµРјРїР»СЏСЂ)
+
+    Args:
+        cls:
+    """
 
     def wrapper_singleton(*args, **kwargs):
         if not wrapper_singleton.instance:
@@ -235,27 +281,31 @@ class TheOne:
     pass
 
 
-print('старт')
+print('СЃС‚Р°СЂС‚')
 first_one = TheOne()
 second_one = TheOne()
 print(id(first_one))
 print(id(second_one))
-print('конец')
+print('РєРѕРЅРµС†')
 
 print('++++' * 80)
 
 """
-Логер ошибок
+Р›РѕРіРµСЂ РѕС€РёР±РѕРє
 """
 
 
 def error_handler(func):
+    """
+    Args:
+        func:
+    """
     def wrapper(*args, **kwargs):
         ret = 0
         try:
             ret = func(*args, **kwargs)
         except Exception:
-            print('>> Ошибка в функции', func.__name__)
+            print('>> РћС€РёР±РєР° РІ С„СѓРЅРєС†РёРё', func.__name__)
         return ret
 
     return wrapper
@@ -263,13 +313,18 @@ def error_handler(func):
 
 @error_handler
 def div(a, b):
+    """
+    Args:
+        a:
+        b:
+    """
     return a / b
 
 
-print('старт')
+print('СЃС‚Р°СЂС‚')
 print(div(10, 2))
 print(div(10, 0))
-print('конец')
+print('РєРѕРЅРµС†')
 
 
 x, y = 50, 25

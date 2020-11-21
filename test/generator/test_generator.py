@@ -1,4 +1,8 @@
 def numbers_range(n):
+    """
+    Args:
+        n:
+    """
     for i in range(n):
         yield i
 
@@ -15,7 +19,7 @@ def subgenerator():
 
 def generator():
     yield 'Hello'
-    yield from subgenerator()  # Запрашиваем значение из субгенератора
+    yield from subgenerator()  # Р—Р°РїСЂР°С€РёРІР°РµРј Р·РЅР°С‡РµРЅРёРµ РёР· СЃСѓР±РіРµРЅРµСЂР°С‚РѕСЂР°
     yield '!'
 
 
@@ -28,6 +32,10 @@ class SimpleIterator:
         return self
 
     def __init__(self, limit):
+        """
+        Args:
+            limit:
+        """
         self.limit = limit
         self.counter = 0
 
@@ -45,7 +53,11 @@ for i in s_iter2:
 
 
 def fibonacci(xterms):
-    # первые два условия
+    # РїРµСЂРІС‹Рµ РґРІР° СѓСЃР»РѕРІРёСЏ
+    """
+    Args:
+        xterms:
+    """
     x1 = 0
     x2 = 1
     count = 0
@@ -53,13 +65,13 @@ def fibonacci(xterms):
     print('febonachi')
 
     if xterms <= 0:
-        print("Укажите целое число больше 0")
+        print("РЈРєР°Р¶РёС‚Рµ С†РµР»РѕРµ С‡РёСЃР»Рѕ Р±РѕР»СЊС€Рµ 0")
     elif xterms == 1:
-        print("Последовательность Фибоначчи до", xterms, ":")
+        print("РџРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ Р¤РёР±РѕРЅР°С‡С‡Рё РґРѕ", xterms, ":")
         print(x1)
     else:
         while count < xterms:
-            print(' что продолжает елд')
+            print(' С‡С‚Рѕ РїСЂРѕРґРѕР»Р¶Р°РµС‚ РµР»Рґ')
             xth = x1 + x2
             x1 = x2
             x2 = xth
@@ -89,6 +101,11 @@ print(list(filter(lambda x: x % 2 == 0, [1, 3, 2, 5, 20, 21])))
 
 class Employee:
     def __init__(self, name, age):
+        """
+        Args:
+            name:
+            age:
+        """
         self.name = name
         self.age = age
 
@@ -103,6 +120,10 @@ print([item.name for item in L])
 
 
 def my_yeld_test(num):
+    """
+    Args:
+        num:
+    """
     akt = 10 - num
     yield akt
 
@@ -118,6 +139,12 @@ print(gen_expr)
 
 
 def AP(a1, d, size):
+    """
+    Args:
+        a1:
+        d:
+        size:
+    """
     count = 1
     while count <= size:
         yield a1
@@ -158,6 +185,10 @@ def find_prime():
 
 
 def find_odd_prime(seq):
+    """
+    Args:
+        seq:
+    """
     for num in seq:
         if (num % 2) != 0:
             yield num

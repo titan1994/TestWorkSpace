@@ -5,6 +5,10 @@ class A:
 
 class B(A):
     def go(self, name):
+        """
+        Args:
+            name:
+        """
         print('Go, {}!'.format(name))
 
 a = A()
@@ -16,6 +20,10 @@ b.go('no')
 
 class As:
     def __init__(self, name):
+        """
+        Args:
+            name:
+        """
         self.name = name
 
 
@@ -24,6 +32,11 @@ import math
 
 class Vector2D:
     def __init__(self, x, y):
+        """
+        Args:
+            x:
+            y:
+        """
         self.x = x
         self.y = y
 

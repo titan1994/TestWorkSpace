@@ -1,26 +1,29 @@
 
 """
-Собираем потихоньку крутые плюшки по декораторам
+РЎРѕР±РёСЂР°РµРј РїРѕС‚РёС…РѕРЅСЊРєСѓ РєСЂСѓС‚С‹Рµ РїР»СЋС€РєРё РїРѕ РґРµРєРѕСЂР°С‚РѕСЂР°Рј
 """
 
 import functools
 
 
 def class_all_decoration(function_decorator):
-    """
-    Собрал комбо из интернета. Конструктор декораторов, который строит конструктор декораторов классов
-    Одно в другое и в итоге - у нас параметризованный универсальный конструктор декораций
+    """РЎРѕР±СЂР°Р» РєРѕРјР±Рѕ РёР· РёРЅС‚РµСЂРЅРµС‚Р°. РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
+    РґРµРєРѕСЂР°С‚РѕСЂРѕРІ, РєРѕС‚РѕСЂС‹Р№ СЃС‚СЂРѕРёС‚ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
+    РґРµРєРѕСЂР°С‚РѕСЂРѕРІ РєР»Р°СЃСЃРѕРІ РћРґРЅРѕ РІ РґСЂСѓРіРѕРµ Рё РІ
+    РёС‚РѕРіРµ - Сѓ РЅР°СЃ РїР°СЂР°РјРµС‚СЂРёР·РѕРІР°РЅРЅС‹Р№
+    СѓРЅРёРІРµСЂСЃР°Р»СЊРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РґРµРєРѕСЂР°С†РёР№
 
-    :param function_decorator: это заранее определенный декоратор
-    :return:
+    Args:
+        function_decorator: СЌС‚Рѕ Р·Р°СЂР°РЅРµРµ РѕРїСЂРµРґРµР»РµРЅРЅС‹Р№
+            РґРµРєРѕСЂР°С‚РѕСЂ
     """
 
     def track_exception(cls):
 
-        # Получаем всё что можно декорировать
+        # РџРѕР»СѓС‡Р°РµРј РІСЃС‘ С‡С‚Рѕ РјРѕР¶РЅРѕ РґРµРєРѕСЂРёСЂРѕРІР°С‚СЊ
         callable_attributes = {k: v for k, v in cls.__dict__.items() if callable(v)}
 
-        # Вставляем все атрибуты куда можем
+        # Р’СЃС‚Р°РІР»СЏРµРј РІСЃРµ Р°С‚СЂРёР±СѓС‚С‹ РєСѓРґР° РјРѕР¶РµРј
         for name, func in callable_attributes.items():
             decorated = function_decorator(func)
             setattr(cls, name, decorated)
@@ -31,15 +34,15 @@ def class_all_decoration(function_decorator):
 
 # def counter(func):
 #     """
-#     Декоратор, считающий и выводящий количество вызовов
-#     декорируемой функции.
+#     Р”РµРєРѕСЂР°С‚РѕСЂ, СЃС‡РёС‚Р°СЋС‰РёР№ Рё РІС‹РІРѕРґСЏС‰РёР№ РєРѕР»РёС‡РµСЃС‚РІРѕ РІС‹Р·РѕРІРѕРІ
+#     РґРµРєРѕСЂРёСЂСѓРµРјРѕР№ С„СѓРЅРєС†РёРё.
 #     """
 #
 #     @functools.wraps(func)
 #     def wrapper(*args, **kwargs):
 #         wrapper.count += 1
 #         res = func(*args, **kwargs)
-#         print("{0} была вызвана: {1}x".format(func.__name__, wrapper.count))
+#         print("{0} Р±С‹Р»Р° РІС‹Р·РІР°РЅР°: {1}x".format(func.__name__, wrapper.count))
 #         return res
 #
 #     wrapper.count = 0
@@ -63,7 +66,11 @@ def class_all_decoration(function_decorator):
 
 
 def singleton(cls):
-    """Класс Singleton (один экземпляр)"""
+    """РљР»Р°СЃСЃ Singleton (РѕРґРёРЅ СЌРєР·РµРјРїР»СЏСЂ)
+
+    Args:
+        cls:
+    """
 
     def wrapper_singleton(*args, **kwargs):
         if not wrapper_singleton.instance:
@@ -79,9 +86,9 @@ class TheOne:
     pass
 
 
-# print('старт')
+# print('СЃС‚Р°СЂС‚')
 # first_one = TheOne()
 # second_one = TheOne()
 # print(id(first_one))
 # print(id(second_one))
-# print('конец')
+# print('РєРѕРЅРµС†')

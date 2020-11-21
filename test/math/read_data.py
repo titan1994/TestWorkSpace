@@ -29,19 +29,19 @@ print(list_date_time)
 
 # fig = plt.figure(dpi=128, figsize=(10, 6))
 # plt.plot(list_max_temp, c='red')
-# Форматирование диаграммы.
+# Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ РґРёР°РіСЂР°РјРјС‹.
 # plt.title("Daily high temperatures, July 2014", fontsize=24)
 # plt.xlabel('', fontsize=16)
 # plt.ylabel("Temperature (F)", fontsize=16)
 # plt.tick_params(axis='both', which='major', labelsize=16)
 # plt.show()
 
-# Нанесение данных на диаграмму.
+# РќР°РЅРµСЃРµРЅРёРµ РґР°РЅРЅС‹С… РЅР° РґРёР°РіСЂР°РјРјСѓ.
 fig = plt.figure(dpi=128, figsize=(10, 6))
 plt.plot(list_date_time, list_max_temp, c='red')
 plt.plot(list_date_time, list_min_temp, c='green')
 plt.fill_between(list_date_time, list_max_temp, list_min_temp, facecolor='blue', alpha=0.1)
-# Форматирование диаграммы.
+# Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ РґРёР°РіСЂР°РјРјС‹.
 plt.title("Daily high temperatures, July 2014", fontsize=24)
 plt.xlabel('', fontsize=16)
 fig.autofmt_xdate()

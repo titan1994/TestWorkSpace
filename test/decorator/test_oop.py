@@ -3,13 +3,22 @@ class Car:
 
     @staticmethod
     def get_class_details():
-        print("Это класс Car")
+        print("Р­С‚Рѕ РєР»Р°СЃСЃ Car")
 
     @staticmethod
     def get_squares(a, b):
+        """
+        Args:
+            a:
+            b:
+        """
         return a*a, b*b
 
     def __init__(self, name):
+        """
+        Args:
+            name:
+        """
         self.name = name
 
     def __str__(self):
@@ -27,13 +36,13 @@ print(bmw)
 
 
 class sampleclass:
-    count = 0  # атрибут класса
+    count = 0  # Р°С‚СЂРёР±СѓС‚ РєР»Р°СЃСЃР°
 
     def increase(self):
         sampleclass.count += 1
 
 
-# Вызов увеличения () для объекта
+# Р’С‹Р·РѕРІ СѓРІРµР»РёС‡РµРЅРёСЏ () РґР»СЏ РѕР±СЉРµРєС‚Р°
 
 s1 = sampleclass()
 s1.increase()
@@ -47,22 +56,22 @@ print(s1.count)
 print(sampleclass.count)
 
 
-# создание класса Vehicle
+# СЃРѕР·РґР°РЅРёРµ РєР»Р°СЃСЃР° Vehicle
 class Vehicle:
     def print_details(self):
-        print("Это родительский метод из класса Vehicle")
+        print("Р­С‚Рѕ СЂРѕРґРёС‚РµР»СЊСЃРєРёР№ РјРµС‚РѕРґ РёР· РєР»Р°СЃСЃР° Vehicle")
 
 
-# создание класса, который наследует Vehicle
+# СЃРѕР·РґР°РЅРёРµ РєР»Р°СЃСЃР°, РєРѕС‚РѕСЂС‹Р№ РЅР°СЃР»РµРґСѓРµС‚ Vehicle
 class Car(Vehicle):
     def print_details(self):
-        print("Это дочерний метод из класса Car")
+        print("Р­С‚Рѕ РґРѕС‡РµСЂРЅРёР№ РјРµС‚РѕРґ РёР· РєР»Р°СЃСЃР° Car")
 
 
-# создание класса Cycle, который наследует Vehicle
+# СЃРѕР·РґР°РЅРёРµ РєР»Р°СЃСЃР° Cycle, РєРѕС‚РѕСЂС‹Р№ РЅР°СЃР»РµРґСѓРµС‚ Vehicle
 class Cycle(Vehicle):
     def print_details(self):
-        print("Это дочерний метод из класса Cycle")
+        print("Р­С‚Рѕ РґРѕС‡РµСЂРЅРёР№ РјРµС‚РѕРґ РёР· РєР»Р°СЃСЃР° Cycle")
 
 
 

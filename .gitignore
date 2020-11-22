@@ -16,3 +16,4 @@ develop-eggs/
 .installed.cfg
 /test/venv/
 /speach_text/model_ru/
+/speach_text/model_big/

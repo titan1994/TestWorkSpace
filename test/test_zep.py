@@ -45,5 +45,5 @@ print(work_space)
 path_pack = Path('{}/{}/{}'.format(work_space, 'virtual_env_name', 'virtual_lib_catalog_name'))
 print(path_pack)
 
-from my_lib.pyrhon_run import lib_install
-lib_install("matplotlib")
+# from my_lib.pyrhon_run import lib_install
+# lib_install("matplotlib")

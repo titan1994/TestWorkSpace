@@ -8,7 +8,7 @@ from pathlib import Path
 import sys
 
 virtual_env_name = 'venv'
-virtual_lib_catalog_name = 'Lib'
+virtual_lib_catalog_name = 'Lib/site-packages'
 
 
 def lib_install(name_pack):

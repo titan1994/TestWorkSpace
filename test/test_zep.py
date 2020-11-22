@@ -5,6 +5,11 @@ for i, j in zip(values, coefficient):
     print(i * j)
 
 
+from my_lib.python_run import packege_install
+
+packege_install('pyqtdeploy', 'PyQt5 pyqtdeploy')
+
+
 scores = [54,67,48,99,27]
 for i, score in enumerate(scores):
    print(i, score)

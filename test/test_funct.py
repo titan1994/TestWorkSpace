@@ -89,3 +89,6 @@ print_abc(**args2)
 
 args3 = {'c': 10}
 print_abc(*(1, 2), **args3)
+
+while True:
+    a = 10

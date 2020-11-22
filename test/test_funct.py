@@ -71,3 +71,21 @@ def tester2(start):
 F = tester2(0)
 F('spam')
 F('ham')
+
+"""
+Распаковка аругментов
+"""
+
+
+def print_abc(a, b, c):
+    print(a, b, c)
+
+
+args = (1, 2, 3)
+print_abc(*args)
+
+args2 = {'b': 2, 'c': 10, 'a': 40}
+print_abc(**args2)
+
+args3 = {'c': 10}
+print_abc(*(1, 2), **args3)

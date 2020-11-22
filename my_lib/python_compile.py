@@ -19,4 +19,4 @@ def compile_exe(python_path_file):
     system('pyinstaller --onefile {}'.format(file_path))
 
 
-compile_exe('test/test_funct.py')
+# compile_exe('test/test_funct.py')

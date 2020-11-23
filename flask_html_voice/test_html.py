@@ -1,4 +1,4 @@
-﻿from flask import Flask, render_template
+﻿from flask import Flask, render_template, request
 from waitress import serve
 
 
@@ -7,8 +7,9 @@ app.config['SECRET_KEY'] = 'super key'
 
 
 @app.route('/')
-@app.route('/index')
+@app.route('/index', methods=['POST'])
 def index():
+    print(request.form.get('date1'))
     return render_template('index.html')
 
 

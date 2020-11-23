@@ -1,178 +1,162 @@
-// set up basic variables for app
+//webkitURL is deprecated but nevertheless
+URL = window.URL || window.webkitURL;
 
-const record = document.querySelector('.record');
-const stop = document.querySelector('.stop');
-const soundClips = document.querySelector('.sound-clips');
-const canvas = document.querySelector('.visualizer');
-const mainSection = document.querySelector('.main-controls');
+var gumStream; 						//stream from getUserMedia()
+var recorder; 						//MediaRecorder object
+var chunks = [];					//Array of chunks of audio data from the browser
+var extension;
 
-// disable stop button while not recording
+var recordButton = document.getElementById("recordButton");
+var stopButton = document.getElementById("stopButton");
+var pauseButton = document.getElementById("pauseButton");
 
-stop.disabled = true;
+//add events to those 2 buttons
+recordButton.addEventListener("click", startRecording);
+stopButton.addEventListener("click", stopRecording);
+pauseButton.addEventListener("click", pauseRecording);
 
-// visualiser setup - create web audio api context and canvas
+// true on chrome, false on firefox
+console.log("audio/webm:"+MediaRecorder.isTypeSupported('audio/webm;codecs=opus'));
+// false on chrome, true on firefox
+console.log("audio/ogg:"+MediaRecorder.isTypeSupported('audio/ogg;codecs=opus'));
 
-let audioCtx;
-const canvasCtx = canvas.getContext("2d");
-
-//main block for doing the audio recording
-
-if (navigator.mediaDevices.getUserMedia) {
-  console.log('getUserMedia supported.');
-
-  const constraints = { audio: true };
-  let chunks = [];
-
-  let onSuccess = function(stream) {
-    const mediaRecorder = new MediaRecorder(stream);
-
-    visualize(stream);
-
-    record.onclick = function() {
-      mediaRecorder.start();
-      console.log(mediaRecorder.state);
-      console.log("recorder started");
-      record.style.background = "red";
-
-      stop.disabled = false;
-      record.disabled = true;
-    }
-
-    stop.onclick = function() {
-      mediaRecorder.stop();
-      console.log(mediaRecorder.state);
-      console.log("recorder stopped");
-      record.style.background = "";
-      record.style.color = "";
-      // mediaRecorder.requestData();
-
-      stop.disabled = true;
-      record.disabled = false;
-    }
-
-    mediaRecorder.onstop = function(e) {
-      console.log("data available after MediaRecorder.stop() called.");
-
-      const clipName = prompt('Enter a name for your sound clip?','My unnamed clip');
-
-      const clipContainer = document.createElement('article');
-      const clipLabel = document.createElement('p');
-      const audio = document.createElement('audio');
-      const deleteButton = document.createElement('button');
-
-      clipContainer.classList.add('clip');
-      audio.setAttribute('controls', '');
-      deleteButton.textContent = 'Delete';
-      deleteButton.className = 'delete';
-
-      if(clipName === null) {
-        clipLabel.textContent = 'My unnamed clip';
-      } else {
-        clipLabel.textContent = clipName;
-      }
-
-      clipContainer.appendChild(audio);
-      clipContainer.appendChild(clipLabel);
-      clipContainer.appendChild(deleteButton);
-      soundClips.appendChild(clipContainer);
-
-      audio.controls = true;
-      const blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
-      chunks = [];
-      const audioURL = window.URL.createObjectURL(blob);
-      audio.src = audioURL;
-      console.log("recorder stopped");
-
-      deleteButton.onclick = function(e) {
-        let evtTgt = e.target;
-        evtTgt.parentNode.parentNode.removeChild(evtTgt.parentNode);
-      }
-
-      clipLabel.onclick = function() {
-        const existingName = clipLabel.textContent;
-        const newClipName = prompt('Enter a new name for your sound clip?');
-        if(newClipName === null) {
-          clipLabel.textContent = existingName;
-        } else {
-          clipLabel.textContent = newClipName;
-        }
-      }
-    }
-
-    mediaRecorder.ondataavailable = function(e) {
-      chunks.push(e.data);
-    }
-  }
-
-  let onError = function(err) {
-    console.log('The following error occured: ' + err);
-  }
-
-  navigator.mediaDevices.getUserMedia(constraints).then(onSuccess, onError);
-
-} else {
-   console.log('getUserMedia not supported on your browser!');
+if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')){
+	extension="webm";
+}else{
+	extension="ogg"
 }
 
-function visualize(stream) {
-  if(!audioCtx) {
-    audioCtx = new AudioContext();
-  }
 
-  const source = audioCtx.createMediaStreamSource(stream);
+function startRecording() {
+	console.log("recordButton clicked");
 
-  const analyser = audioCtx.createAnalyser();
-  analyser.fftSize = 2048;
-  const bufferLength = analyser.frequencyBinCount;
-  const dataArray = new Uint8Array(bufferLength);
+	/*
+		Simple constraints object, for more advanced audio features see
+		https://addpipe.com/blog/audio-constraints-getusermedia/
+	*/
+    
+    var constraints = {audio: true}
 
-  source.connect(analyser);
-  //analyser.connect(audioCtx.destination);
+ 	/*
+    	Disable the record button until we get a success or fail from getUserMedia() 
+	*/
 
-  draw()
+	recordButton.disabled = true;
+	stopButton.disabled = false;
+	pauseButton.disabled = false
 
-  function draw() {
-    const WIDTH = canvas.width
-    const HEIGHT = canvas.height;
+	/*
+    	We're using the standard promise based getUserMedia() 
+    	https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
+	*/
 
-    requestAnimationFrame(draw);
+	navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+		console.log("getUserMedia() success, stream created, initializing MediaRecorder");
 
-    analyser.getByteTimeDomainData(dataArray);
+		/*  assign to gumStream for later use  */
+		gumStream = stream;
 
-    canvasCtx.fillStyle = 'rgb(200, 200, 200)';
-    canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+		var options = {
+	      audioBitsPerSecond :  256000,
+	      videoBitsPerSecond : 2500000,
+	      bitsPerSecond:       2628000,
+	      mimeType : 'audio/'+extension+';codecs=opus'
+	    }
 
-    canvasCtx.lineWidth = 2;
-    canvasCtx.strokeStyle = 'rgb(0, 0, 0)';
+	    //update the format 
+		document.getElementById("formats").innerHTML='Sample rate: 48kHz, MIME: audio/'+extension+';codecs=opus';
 
-    canvasCtx.beginPath();
+		/* 
+			Create the MediaRecorder object
+		*/
+		recorder = new MediaRecorder(stream, options);
 
-    let sliceWidth = WIDTH * 1.0 / bufferLength;
-    let x = 0;
+		//when data becomes available add it to our attay of audio data
+	    recorder.ondataavailable = function(e){
+	    	console.log("recorder.ondataavailable:" + e.data);
+	    	
+	    	console.log ("recorder.audioBitsPerSecond:"+recorder.audioBitsPerSecond)
+	    	console.log ("recorder.videoBitsPerSecond:"+recorder.videoBitsPerSecond)
+	    	console.log ("recorder.bitsPerSecond:"+recorder.bitsPerSecond)
+	      	// add stream data to chunks
+	      	chunks.push(e.data);
+	      	// if recorder is 'inactive' then recording has finished
+	      	if (recorder.state == 'inactive') {
+	          // convert stream data chunks to a 'webm' audio format as a blob
+	          const blob = new Blob(chunks, { type: 'audio/'+extension, bitsPerSecond:128000});
+	          createDownloadLink(blob)
+	      	}
+	    };
 
+	    recorder.onerror = function(e){
+	    	console.log(e.error);
+	    }
 
-    for(let i = 0; i < bufferLength; i++) {
+	    //start recording using 1 second chunks
+	    //Chrome and Firefox will record one long chunk if you do not specify the chunck length
+	    recorder.start(1000);
 
-      let v = dataArray[i] / 128.0;
-      let y = v * HEIGHT/2;
-
-      if(i === 0) {
-        canvasCtx.moveTo(x, y);
-      } else {
-        canvasCtx.lineTo(x, y);
-      }
-
-      x += sliceWidth;
-    }
-
-    canvasCtx.lineTo(canvas.width, canvas.height/2);
-    canvasCtx.stroke();
-
-  }
+    	//recorder.start();
+    }).catch(function(err) {
+	  	//enable the record button if getUserMedia() fails
+    	recordButton.disabled = false;
+    	stopButton.disabled = true;
+    	pauseButton.disabled = true
+	});
 }
 
-window.onresize = function() {
-  canvas.width = mainSection.offsetWidth;
+function pauseRecording(){
+	console.log("pauseButton clicked recorder.state=",recorder.state );
+	if (recorder.state=="recording"){
+		//pause
+		recorder.pause();
+		pauseButton.innerHTML="Resume";
+	}else if (recorder.state=="paused"){
+		//resume
+		recorder.resume();
+		pauseButton.innerHTML="Pause";
+
+	}
 }
 
-window.onresize();
+function stopRecording() {
+	console.log("stopButton clicked");
+
+	//disable the stop button, enable the record too allow for new recordings
+	stopButton.disabled = true;
+	recordButton.disabled = false;
+	pauseButton.disabled = true;
+
+	//reset button just in case the recording is stopped while paused
+	pauseButton.innerHTML="Pause";
+	
+	//tell the recorder to stop the recording
+	recorder.stop();
+
+	//stop microphone access
+	gumStream.getAudioTracks()[0].stop();
+}
+
+function createDownloadLink(blob) {
+	
+	var url = URL.createObjectURL(blob);
+	var au = document.createElement('audio');
+	var li = document.createElement('li');
+	var link = document.createElement('a');
+
+	//add controls to the <audio> element
+	au.controls = true;
+	au.src = url;
+
+	//link the a element to the blob
+	link.href = url;
+	link.download = new Date().toISOString() + '.'+extension;
+	link.innerHTML = link.download;
+
+	//add the new audio and a elements to the li element
+	li.appendChild(au);
+	li.appendChild(link);
+
+	//add the li element to the ordered list
+	recordingsList.appendChild(li);
+}

@@ -1,0 +1,15 @@
+body {
+    background-color: #252525;
+}
+
+div {
+    color: #d6d6d6;
+}
+
+table.table tr td {
+    width: 50%;
+}
+
+input#myRange.slider {
+    width: 100%;
+}

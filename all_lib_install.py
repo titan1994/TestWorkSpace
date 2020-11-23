@@ -14,3 +14,6 @@
 # # import cv2
 # lib_install('pip install opencv-python')
 
+# lib_install('scipy')
+# lib_install('waitress')
+

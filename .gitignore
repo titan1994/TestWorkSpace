@@ -22,3 +22,4 @@ develop-eggs/
 /test/venv/
 /speach_text/model_ru/
 /speach_text/model_big/
+/flask_server/archive/

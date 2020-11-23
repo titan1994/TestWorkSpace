@@ -2,6 +2,11 @@
 .idea/
 pip-log.txt
 pyvenv.cfg
+__pycache__/
+tmp.wav
+archive/*
+!archive/.gitkeep
+locks/
 
 # Packages
 *.egg

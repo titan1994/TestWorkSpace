@@ -18,5 +18,5 @@
 # lib_install('scipy')
 # lib_install('waitress')
 
-# lib_install('fasttext', 'pipwin')
+lib_install('fasttext', 'pipwin')
 

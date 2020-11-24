@@ -1,5 +1,6 @@
 import sqlite3
 
+
 # Осталось сделать - удаление, поиск таблиц, расширение таблиц, обновление таблиц
 
 
@@ -94,7 +95,7 @@ class SqlDataConn:
             text_request_insert += text_add + ","
         text_request_insert = text_request_insert[:-1] + ")"
 
-        text_values = "?,"*len(values)
+        text_values = "?," * len(values)
         text_values = text_values[:-1]
 
         text_request_insert += " values(" + text_values + ")"
@@ -104,8 +105,28 @@ class SqlDataConn:
             cursor_obj = self.conn.cursor()
             cursor_obj.execute(text_request_insert, tuple(values.values()))
             self.conn.commit()
+
         except Exception:
             print('insert table error\n {}'.format(text_values))
+
+    def delete_table(self, table_name):
+
+        """
+        Удаление всей таблицы данных
+        :param table_name: имя таблицы
+        :return:
+        """
+
+        is_table = self.check_table(table_name)
+        if is_table:
+            # noinspection PyBroadException
+            try:
+                cursor_obj = self.conn.cursor()
+                cursor_obj.execute('DROP TABLE IF EXISTS {}'.format(table_name))
+                self.conn.commit()
+
+            except Exception as info:
+                print('delete table error\n {}'.format(info))
 
     def select_from(self, table_name, global_criteria='AND', **columns):
         """
@@ -123,7 +144,7 @@ class SqlDataConn:
         text_find = ''
 
         for key, val in columns.items():
-            text_request_select += key+','
+            text_request_select += key + ','
             string_value = str(val)
             if len(string_value) > 0:
                 text_find += key + ' ' + string_value + ' {} '.format(global_criteria)
@@ -141,7 +162,7 @@ class SqlDataConn:
 
         # noinspection PyBroadException
         try:
-            cursor_obj = data_base.conn.cursor()
+            cursor_obj = self.conn.cursor()
             cursor_obj.execute(text_request_select)
             return cursor_obj.fetchall()
 
@@ -151,11 +172,9 @@ class SqlDataConn:
 
 
 if __name__ == '__main__':
-
     data_base_name = 'test.db'
 
     with SqlDataConn(data_base_name) as data_base:
-
         data_base.create_table('album', name='TEXT', count='INTEGER')
         data_base.insert_into('album', name='vamia3', count=20)
 
@@ -163,4 +182,4 @@ if __name__ == '__main__':
         rows = data_base.select_from('album', name='="vamia3"')
         print(rows)
 
-
+        # data_base.delete_table('album')

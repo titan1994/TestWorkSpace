@@ -31,6 +31,7 @@ if __name__ == '__main__':
 
             file_txt = str(file_wav.name).replace(wav_extension, text_extension)
             path_text_file = text_folder.joinpath(text_folder, file_txt)
+
             if not path_text_file.exists():
 
                 try:

@@ -1,27 +1,25 @@
 import fasttext
 import argparse
-import sqlite3
+from os import remove as del_file
 from pathlib import Path
 from my_lib.sqlite_work import SqlDataConn
 from speach_text.path_ext import new_ext_file_path
 
 model_folder = Path.cwd() / 'learn_model'
-text_extension = 'txt'
-base_extension = 'db'
-learn_extension = 'bin'
+text_extension = '.txt'
+base_extension = '.db'
+learn_extension = '.bin'
 
-
+dim_vector = 50
 MODEL_SETTINGS = {
     'model': 'skipgram',
-    'dim': 50,
+    'dim': dim_vector,
     'epoch': 200,
     'minn': 2,
     'maxn': 6,
     'lr': 0.5,
-    'wordNgrams': 2,
-    'loss': 'ova'
+    'wordNgrams': 2
 }
-
 
 if __name__ == '__main__':
     # 'python demon_learn.py --string demon' - запуск бесконечной обработки
@@ -30,36 +28,69 @@ if __name__ == '__main__':
     parser.add_argument('--string', type=str, default='', help='')
     opt = parser.parse_args()
 
+    DICT_COLUMNS = {'uid': 'TEXT', 'search': 'TEXT'}
+    for i in range(dim_vector):
+        DICT_COLUMNS['vect{}'.format(i)] = 'TEXT'
+
     while True:
-        all_txt_file = Path(model_folder).rglob('*.{}'.format(text_extension))
+        all_txt_file = Path(model_folder).rglob('*{}'.format(text_extension))
         for file_txt in all_txt_file:
-            path_base = new_ext_file_path(file_txt, base_extension)
-            path_bin = new_ext_file_path(file_txt, learn_extension)
 
-            with SqlDataConn(path_base) as base_model:
-                base_model.delete_table(path_base.stem)
+            try:
+                path_base = new_ext_file_path(file_txt, base_extension)
+                path_bin = new_ext_file_path(file_txt, learn_extension)
 
-                # Обучение
-                model = fasttext.train_unsupervised(file_txt, **MODEL_SETTINGS)
-                model.save_model(path_bin)
+                with SqlDataConn(path_base) as base_model:
 
-                # Получение векторов
+                    name_table = path_base.stem
+                    base_model.delete_table(name_table)
+                    base_model.create_table(name_table, **DICT_COLUMNS)
 
-                model = fasttext.load_model(path_bin)
+                    MODEL_SETTINGS['input'] = str(file_txt.absolute())
+                    model = fasttext.train_unsupervised(**MODEL_SETTINGS);
 
-                num = []
-                with open('/home/uadmin/Загрузки/fasttext1C/1c/data/os_pochta.txt', 'r') as r:
-                    for line in r.readlines():
-                        parts = line.split(';')
-                        s = parts[1].replace('\n', '')
-                        b = [str(x) for x in model.get_word_vector(s)]
-                        num.append((parts[0],) + tuple(b))
-                print("INSERT INTO nomenclature VALUES (" + ','.join(['?'] * (vector_dim + 1)) + ")")
-                print(num)
+                    str_path_bin = str(path_bin.absolute())
+                    try:
+                        del_file(str_path_bin)
+                        model.save_model(str_path_bin)
 
-                # cursor.executemany(, num)
-                # conn.commit()
+                    except Exception as info:
+                        print('ошибка сохранения модели')
+                        raise
 
+                    # Получение векторов
+                    model = fasttext.load_model(str_path_bin)
+
+                    list_vectors = []
+                    with open(file_txt, 'r', encoding='utf-8') as read_file:
+
+                        for line in read_file.readlines():
+                            parts = line.split(';')
+
+                            str_uid = parts[0].strip()
+                            str_uid.replace('\n', '')
+                            string_analyze = parts[1].strip()
+                            string_analyze.replace('\n', '')
+
+                            this_vector = model.get_word_vector(string_analyze)
+                            vector_string = [str(x) for x in this_vector]
+
+                            list_vectors.append((str_uid, string_analyze) + tuple(vector_string))
+
+                    # Сохранение векторов в базу данных
+                    str_scene = ',?' * (len(DICT_COLUMNS))
+                    str_scene = str_scene[1:]
+
+                    str_req = "INSERT INTO {} VALUES ({})".format(name_table, str_scene)
+
+                    cursor_obj = base_model.conn.cursor()
+                    cursor_obj.executemany(str_req, list_vectors)
+                    base_model.conn.commit()
+
+                    del_file(str(file_txt))
+
+            except Exception as info:
+                print(info)
 
         if opt.string != 'demon':
             break

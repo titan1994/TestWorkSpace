@@ -4,6 +4,7 @@ import argparse
 import wave
 import json
 
+
 name_model = 'model_ru'
 wav_folder = Path.cwd() / 'file_wav'
 text_folder = Path.cwd() / 'file_text'

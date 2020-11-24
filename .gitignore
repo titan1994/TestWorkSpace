@@ -25,3 +25,4 @@ develop-eggs/
 /flask_server/archive/
 /speach_text/file_text/
 /speach_text/file_wav/
+/speach_text/learn_model/

@@ -13,8 +13,10 @@
 # lib_install('numpy')
 
 # import cv2
-# lib_install('pip install opencv-python')
+# lib_install('opencv-python')
 
 # lib_install('scipy')
 # lib_install('waitress')
+
+# lib_install('fasttext', 'pipwin')
 

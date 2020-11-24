@@ -23,3 +23,5 @@ develop-eggs/
 /speach_text/model_ru/
 /speach_text/model_big/
 /flask_server/archive/
+/speach_text/file_text/
+/speach_text/file_wav/

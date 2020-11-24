@@ -4,22 +4,8 @@ from os import remove as del_file
 from pathlib import Path
 from my_lib.sqlite_work import SqlDataConn
 from speach_text.path_ext import new_ext_file_path
+import speach_text.global_settings as GST
 
-model_folder = Path.cwd() / 'learn_model'
-text_extension = '.txt'
-base_extension = '.db'
-learn_extension = '.bin'
-
-dim_vector = 50
-MODEL_SETTINGS = {
-    'model': 'skipgram',
-    'dim': dim_vector,
-    'epoch': 200,
-    'minn': 2,
-    'maxn': 6,
-    'lr': 0.5,
-    'wordNgrams': 2
-}
 
 if __name__ == '__main__':
     # 'python demon_learn.py --string demon' - запуск бесконечной обработки
@@ -29,16 +15,16 @@ if __name__ == '__main__':
     opt = parser.parse_args()
 
     DICT_COLUMNS = {'uid': 'TEXT', 'search': 'TEXT'}
-    for i in range(dim_vector):
+    for i in range(GST.fst_dim_vector):
         DICT_COLUMNS['vect{}'.format(i)] = 'TEXT'
 
     while True:
-        all_txt_file = Path(model_folder).rglob('*{}'.format(text_extension))
+        all_txt_file = Path(GST.fts_model_folder).rglob('*{}'.format(GST.text_extension))
         for file_txt in all_txt_file:
 
             try:
-                path_base = new_ext_file_path(file_txt, base_extension)
-                path_bin = new_ext_file_path(file_txt, learn_extension)
+                path_base = new_ext_file_path(file_txt, GST.base_extension)
+                path_bin = new_ext_file_path(file_txt, GST.learn_extension)
 
                 with SqlDataConn(path_base) as base_model:
 
@@ -46,8 +32,8 @@ if __name__ == '__main__':
                     base_model.delete_table(name_table)
                     base_model.create_table(name_table, **DICT_COLUMNS)
 
-                    MODEL_SETTINGS['input'] = str(file_txt.absolute())
-                    model = fasttext.train_unsupervised(**MODEL_SETTINGS);
+                    GST.FST_MODEL_SETTINGS['input'] = str(file_txt.absolute())
+                    model = fasttext.train_unsupervised(**GST.FST_MODEL_SETTINGS)
 
                     str_path_bin = str(path_bin.absolute())
                     try:

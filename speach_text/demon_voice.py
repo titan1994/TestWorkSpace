@@ -4,14 +4,9 @@ import argparse
 import wave
 import json
 
+import speach_text.global_settings as GST
 
-name_model = 'model_ru'
-wav_folder = Path.cwd() / 'file_wav'
-text_folder = Path.cwd() / 'file_text'
-wav_extension = 'wav'
-text_extension = 'txt'
-
-model = Model(name_model)
+model = Model(GST.voice_model_folder)
 
 
 class ErrWav(Exception):
@@ -27,11 +22,11 @@ if __name__ == '__main__':
     opt = parser.parse_args()
 
     while True:
-        all_wav_file = Path(wav_folder).rglob('*.{}'.format(wav_extension))
+        all_wav_file = Path(GST.voice_wav_folder).rglob('*.{}'.format(GST.wav_extension))
         for file_wav in all_wav_file:
 
-            file_txt = str(file_wav.name).replace(wav_extension, text_extension)
-            path_text_file = text_folder.joinpath(text_folder, file_txt)
+            file_txt = str(file_wav.name).replace(GST.wav_extension, GST.text_extension)
+            path_text_file = GST.voice_text_folder.joinpath(GST.voice_text_folder, file_txt)
 
             if not path_text_file.exists():
 

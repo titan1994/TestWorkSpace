@@ -19,7 +19,7 @@ class ErrWav(Exception):
 
 
 if __name__ == '__main__':
-    # 'python voice_to_file.py --string demon' - запуск бесконечной обработки
+    # 'python demon_voice.py --string demon' - запуск бесконечной обработки
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--string', type=str, default='', help='')

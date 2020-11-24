@@ -1,4 +1,4 @@
-﻿from my_lib.python_run import lib_install
+﻿from my_lib.python_run import lib_install, get_python_pass
 
 # lib_install('flask')
 # lib_install('flask_script')
@@ -18,5 +18,10 @@
 # lib_install('scipy')
 # lib_install('waitress')
 
-lib_install('fasttext', 'pipwin')
+# lib_install('fasttext', 'pipwin')
+# lib_install('torch', 'pipwin')
 
+# Fais не взлетает на винде
+# from os import system
+# system('{} pywin32_postinstall.py'.format(get_python_pass()))
+# # lib_install('faiss-cpu')

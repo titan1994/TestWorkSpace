@@ -1,4 +1,4 @@
-﻿from my_lib.python_run import lib_install
+﻿# from my_lib.python_run import lib_install
 
 # lib_install('vosk')
 # lib_install('pyaudio', 'pipwin')

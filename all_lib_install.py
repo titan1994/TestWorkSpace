@@ -7,7 +7,7 @@
 
 # lib_install('vosk')
 # lib_install('pipwin')
-lib_install('pyaudio', 'pipwin')
+# lib_install('pyaudio', 'pipwin')
 
 # lib_install('flask_socketio')
 # lib_install('numpy')

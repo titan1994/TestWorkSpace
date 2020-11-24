@@ -20,9 +20,6 @@ def lib_install(name_pack, name_module='pip'):
         name_module: имя модуля pip, pipwin
     """
 
-    if name_module not in ('pip', 'pip3'):
-        pip_install_pack(name_module, 'pip')
-
     pip_install_pack(name_pack, name_module)
 
 
@@ -44,7 +41,14 @@ def pip_install_pack(name_pack, name_module='pip'):
         work_space, *python_exe = python_pass.split('{}{}'.format(virtual_env_name, Path('/')))
         path_pack = Path('{}/{}/{}'.format(work_space, virtual_env_name, virtual_lib_catalog_name))
 
-        inst_cmd = '{} -m {} install --upgrade --target={} {}'.format(python_pass, name_module, path_pack, name_pack)
+        if name_module == 'pipwin':
+            inst_cmd = '{} -m {} install {}'.format(
+                python_pass, name_module, name_pack, path_pack,
+            )
+
+        else:
+            inst_cmd = '{} -m {} install --upgrade --target={} {}'.format(
+                python_pass, name_module, path_pack, name_pack)
 
     print(inst_cmd)
     system(inst_cmd)

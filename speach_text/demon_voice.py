@@ -3,6 +3,7 @@ from pathlib import Path
 import argparse
 import wave
 import json
+from os import remove as del_file
 
 import speach_text.global_settings as GST
 
@@ -53,6 +54,8 @@ if __name__ == '__main__':
                         text_write.write(dict_py['text'] + '\n')
 
                     print(dict_py['text'])
+
+                    del_file(str(file_wav))
 
                 except Exception as err_info:
                     print(err_info)

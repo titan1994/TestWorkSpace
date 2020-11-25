@@ -21,7 +21,4 @@
 # lib_install('fasttext', 'pipwin')
 # lib_install('torch', 'pipwin')
 
-# Fais не взлетает на винде
-# from os import system
-# system('{} pywin32_postinstall.py'.format(get_python_pass()))
-# # lib_install('faiss-cpu')
+lib_install('conda', 'pipwin')

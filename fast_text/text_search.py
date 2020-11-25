@@ -69,8 +69,6 @@ def func():
     # print(D)
 
     f = open('/home/uadmin/Загрузки/fasttext1C/vec.txt', 'w')
-    #for i in I[0, :]:
-    #    f.write(nomen[i] + '\n')
     itr = 0
 
     while itr < I.size:
@@ -78,14 +76,7 @@ def func():
         itr+=1
     f.close()
 
-    #print(D.size)
-    #print('re' + str(nomen[I.item(0)]) + str(D.item(0)))
 
-
-    #f = open('/home/uadmin/Загрузки/fasttext1C/dec.txt', 'w')
-    #for i in D[0, :]:
-    #    f.write(str(i)+ '\n')
-    #f.close()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

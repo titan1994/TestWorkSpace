@@ -4,7 +4,7 @@ import argparse
 import wave
 import json
 from os import remove as del_file
-
+from speach_text.smart_search import find_text_in_models
 import speach_text.global_settings as GST
 
 model = Model(GST.voice_model_folder)
@@ -50,11 +50,14 @@ if __name__ == '__main__':
                     result_dict_json = rec.FinalResult()
                     dict_py = json.loads(result_dict_json)
 
+                    # Получаем json и сохраняем в папку
+                    data_found = find_text_in_models(dict_py['text'])
+
                     with open(path_text_file, 'w', encoding='utf8') as text_write:
-                        text_write.write(dict_py['text'] + '\n')
+                        json.dump(data_found, text_write)
+                        # text_write.write(dict_py['text'] + '\n')
 
-                    print(dict_py['text'])
-
+                    # Удаляем файлик звука. Чтобы не захламлять систему. Возможно закинуть это на плечи 1С?
                     del_file(str(file_wav))
 
                 except Exception as err_info:

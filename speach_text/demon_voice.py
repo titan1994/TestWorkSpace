@@ -50,6 +50,7 @@ if __name__ == '__main__':
                     result_dict_json = rec.FinalResult()
                     dict_py = json.loads(result_dict_json)
 
+                    wf.close()
                     # Получаем json и сохраняем в папку
                     data_found = find_text_in_models(dict_py['text'])
 

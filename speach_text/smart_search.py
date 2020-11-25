@@ -18,6 +18,7 @@ def find_text_in_models(text):
 
         dict_result - словарь с найденными объектами
     """
+    print(text)
     dict_result = {}
 
     all_model_file = Path(GST.fts_model_folder).rglob('*{}'.format(GST.base_extension))

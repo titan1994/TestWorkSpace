@@ -1,6 +1,6 @@
 ﻿from my_lib.python_run import lib_install, get_python_pass
 
-lib_install('pipwin')
+# lib_install('pipwin')
 # lib_install('flask')
 # lib_install('flask_script')
 # lib_install('flask-wtf')
@@ -12,7 +12,7 @@ lib_install('pipwin')
 # lib_install('waitress')
 # lib_install('pyaudio', 'pipwin')
 #
-# lib_install('opencv-python')  # import cv2
+lib_install('opencv-python')  # import cv2
 
 # По очереди, тяжело идут
 # lib_install('vosk')
